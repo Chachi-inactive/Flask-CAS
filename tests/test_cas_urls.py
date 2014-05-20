@@ -1,5 +1,9 @@
 import unittest
-from flask_cas.cas_urls import *
+from flask_cas.cas_urls import create_url
+from flask_cas.cas_urls import create_cas_login_url
+from flask_cas.cas_urls import create_cas_logout_url
+from flask_cas.cas_urls import create_cas_validate_url
+
 
 class test_create_url(unittest.TestCase):
 
@@ -74,7 +78,7 @@ class test_create_url(unittest.TestCase):
             ),
             'http://example.com/?key=value',
         )
-    
+
     def test_options_with_none_value(self):
         self.assertEqual(
             create_url(
@@ -104,12 +108,14 @@ class test_create_url(unittest.TestCase):
             'http://localhost:5000?url=http%3A%2F%2Fexample.com',
         )
 
+
 class test_create_cas_login_url(unittest.TestCase):
 
     def test_minimal(self):
         self.assertEqual(
             create_cas_login_url(
                 'http://sso.pdx.edu',
+                '/cas',
                 'http://localhost:5000',
             ),
             'http://sso.pdx.edu/cas?service=http%3A%2F%2Flocalhost%3A5000',
@@ -119,6 +125,7 @@ class test_create_cas_login_url(unittest.TestCase):
         self.assertEqual(
             create_cas_login_url(
                 'http://sso.pdx.edu',
+                '/cas',
                 'http://localhost:5000',
                 renew="true",
             ),
@@ -129,6 +136,7 @@ class test_create_cas_login_url(unittest.TestCase):
         self.assertEqual(
             create_cas_login_url(
                 'http://sso.pdx.edu',
+                '/cas',
                 'http://localhost:5000',
                 gateway="true",
             ),
@@ -139,6 +147,7 @@ class test_create_cas_login_url(unittest.TestCase):
         self.assertEqual(
             create_cas_login_url(
                 'http://sso.pdx.edu',
+                '/cas',
                 'http://localhost:5000',
                 renew="true",
                 gateway="true",
@@ -146,12 +155,14 @@ class test_create_cas_login_url(unittest.TestCase):
             'http://sso.pdx.edu/cas?service=http%3A%2F%2Flocalhost%3A5000&renew=true&gateway=true',
         )
 
+
 class test_create_cas_logout_url(unittest.TestCase):
 
     def test_minimal(self):
         self.assertEqual(
             create_cas_logout_url(
                 'http://sso.pdx.edu',
+                '/cas/logout'
             ),
             'http://sso.pdx.edu/cas/logout',
         )
@@ -160,19 +171,22 @@ class test_create_cas_logout_url(unittest.TestCase):
         self.assertEqual(
             create_cas_logout_url(
                 'http://sso.pdx.edu',
+                '/cas/logout',
                 'http://localhost:5000',
             ),
             'http://sso.pdx.edu/cas/logout?url=http%3A%2F%2Flocalhost%3A5000'
         )
+
 
 class test_create_cas_validate_url(unittest.TestCase):
 
     def test_minimal(self):
         self.assertEqual(
             create_cas_validate_url(
-                 'http://sso.pdx.edu',
-                 'http://localhost:5000/login',
-                 'ST-58274-x839euFek492ou832Eena7ee-cas',
+                'http://sso.pdx.edu',
+                '/cas/validate',
+                'http://localhost:5000/login',
+                'ST-58274-x839euFek492ou832Eena7ee-cas'
             ),
             'http://sso.pdx.edu/cas/validate?service=http%3A%2F%2Flocalhost%3A5000%2Flogin&ticket=ST-58274-x839euFek492ou832Eena7ee-cas'
         )
@@ -180,10 +194,11 @@ class test_create_cas_validate_url(unittest.TestCase):
     def test_with_renew(self):
         self.assertEqual(
             create_cas_validate_url(
-                 'http://sso.pdx.edu',
-                 'http://localhost:5000/login',
-                 'ST-58274-x839euFek492ou832Eena7ee-cas',
-                 renew='true',
+                'http://sso.pdx.edu',
+                '/cas/validate',
+                'http://localhost:5000/login',
+                'ST-58274-x839euFek492ou832Eena7ee-cas',
+                renew='true',
             ),
             'http://sso.pdx.edu/cas/validate?service=http%3A%2F%2Flocalhost%3A5000%2Flogin&ticket=ST-58274-x839euFek492ou832Eena7ee-cas&renew=true'
         )

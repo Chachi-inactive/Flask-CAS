@@ -2,8 +2,6 @@
 flask_cas.__init__
 """
 
-from flask import current_app
-
 # Find the stack on which we want to store the database connection.
 # Starting with Flask 0.9, the _app_ctx_stack is the correct one,
 # before that we need to use the _request_ctx_stack.
@@ -14,13 +12,14 @@ except ImportError:
 
 from . import routing
 
+
 class CAS(object):
     """
     Required Configs:
-    
+
     |Key             |
     |----------------|
-    |CAS_SERVER      | 
+    |CAS_SERVER      |
     |CAS_AFTER_LOGIN |
 
     Optional Configs:
@@ -40,7 +39,9 @@ class CAS(object):
         # Configuration defaults
         app.config.setdefault('CAS_TOKEN_SESSION_KEY', '_CAS_TOKEN')
         app.config.setdefault('CAS_USERNAME_SESSION_KEY', 'CAS_USERNAME')
-        
+        app.config.setdefault('CAS_LOGIN_ROUTE', '/cas')
+        app.config.setdefault('CAS_LOGOUT_ROUTE', '/cas/logout')
+        app.config.setdefault('CAS_VALIDATE_ROUTE', '/cas/validate')
         # Register Blueprint
         app.register_blueprint(routing.blueprint, url_prefix=url_prefix)
 
